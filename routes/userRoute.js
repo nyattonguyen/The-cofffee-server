@@ -8,6 +8,15 @@ userRouter.post("/register", userController.register);
 userRouter.post("/login", userController.login);
 userRouter.get("/logout", userController.logout);
 userRouter.get("/me", isAuthenticatedUser, userController.getUserDetails);
+userRouter.put("/me/update", isAuthenticatedUser, userController.updateUser);
+
+userRouter.put(
+  "/password/update",
+  isAuthenticatedUser,
+  userController.updatePassword
+);
+userRouter.post("/change-password", userController.forgotPassword);
+userRouter.put("/password/reset/:token", userController.resetPassword);
 userRouter.get(
   "/admin/user",
   isAuthenticatedUser,
@@ -21,4 +30,10 @@ userRouter.get(
   userController.getOneUser
 );
 
+userRouter.put(
+  "/admin/user/updatestatus/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  userController.updateUserStatus
+);
 export default userRouter;
