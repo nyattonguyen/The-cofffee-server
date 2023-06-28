@@ -11,6 +11,7 @@ categoryRoute.get(
   authorizeRoles("admin"),
   categoryController.getAllCategory
 );
+categoryRoute.get("/:id", categoryController.updateCategoryStatus);
 
 categoryRoute.post(
   "/",

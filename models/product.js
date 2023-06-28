@@ -6,21 +6,49 @@ const productSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    image: {
-      type: String,
-      require: true,
-    },
     desc: {
       type: String,
       require: true,
     },
-    price: {
+    img: {
       type: String,
+      require: true,
+      // public_id: {
+      //   type: String,
+      //   required: true,
+      // },
+      // url: {
+      //   type: String,
+      //   required: true,
+      // },
+    },
+    price: {
+      type: Number,
       require: true,
     },
+    stick: {
+      type: Boolean,
+      default: false,
+    },
     status: {
-      type: String,
-      require: true,
+      type: Boolean,
+      default: false,
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    sizes: {
+      type: [
+        {
+          text: { type: String, required: true },
+          price: { type: Number, required: true },
+        },
+      ],
     },
     extraOptions: {
       type: [
@@ -30,6 +58,11 @@ const productSchema = new mongoose.Schema(
         },
       ],
     },
+    // Stock: {
+    //   type: Number,
+    //   default: 1,
+    //   maxLength: 5,
+    // }, //
   },
   { timestamps: true }
 );

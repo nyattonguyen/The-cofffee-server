@@ -67,15 +67,13 @@ export const updateCategoryId = catchAsyncError(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  await updateCategory?.save();
-
   res.status(200).json({
     success: true,
     updateCategory,
     message: "update category success",
   });
 });
-export const updateUserStatus = catchAsyncError(async (req, res, next) => {
+export const updateCategoryStatus = catchAsyncError(async (req, res, next) => {
   const category = await CategoryModel.findById(req.params.id);
 
   if (!category) {
