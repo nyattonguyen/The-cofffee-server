@@ -8,7 +8,11 @@ const categorySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      require: true,
+      default: false,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }
