@@ -4,15 +4,15 @@ const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      require: true,
+      required: true,
     },
     desc: {
       type: String,
-      require: true,
+      required: true,
     },
     img: {
       type: String,
-      require: true,
+      required: true,
       // public_id: {
       //   type: String,
       //   required: true,
@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      require: true,
+      required: true,
     },
     stick: {
       type: Boolean,
@@ -37,10 +37,12 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     sizes: {
       type: [

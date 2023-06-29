@@ -11,7 +11,7 @@ export const getProduct = catchAsyncError(async (req, res, next) => {
   });
 });
 export const getAllProduct = catchAsyncError(async (req, res, next) => {
-  const product = await ProductModel.find();
+  const product = await ProductModel.find().where({ status: false });
   const productCount = await ProductModel.count();
 
   res.status(200).json({
@@ -21,7 +21,17 @@ export const getAllProduct = catchAsyncError(async (req, res, next) => {
     productCount,
   });
 });
+export const getAllAdminProduct = catchAsyncError(async (req, res, next) => {
+  const product = await ProductModel.find().sort({ status: false });
+  const productCount = await ProductModel.count();
 
+  res.status(200).json({
+    product,
+    message: "get products successfully",
+    success: true,
+    productCount,
+  });
+});
 export const createProduct = catchAsyncError(async (req, res, next) => {
   // const { title, desc, image, price, stick, status, userId, sizes, extraOptions } = req.body;
   const user = req.user;

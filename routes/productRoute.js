@@ -5,12 +5,12 @@ import { isAuthenticatedUser, authorizeRoles } from "../middleware/auth.js";
 const productRoute = express.Router();
 
 productRoute.get("/", productController.getAllProduct);
-// productRoute.get(
-//   "/all",
-//   isAuthenticatedUser,
-//   authorizeRoles("admin"),
-//   productController.getAllCategory
-// );
+productRoute.get(
+  "/all",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  productController.getAllAdminProduct
+);
 
 productRoute.post(
   "/",
