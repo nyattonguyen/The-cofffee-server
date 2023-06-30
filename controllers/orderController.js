@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import catchAsyncError from "../middleware/catchAsyncErrors.js";
 import { OrderModel } from "../models/index.js";
+import ErrorHandler from "../utills/errorHandle.js";
 export const createOrder = catchAsyncError(async (req, res, next) => {
   const {
     orderItems,
@@ -52,5 +53,61 @@ export const getAllOrder = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     message: "Get all order successfully...",
     orders,
+  });
+});
+export const getOneOrder = catchAsyncError(async (req, res, next) => {
+  const order = await OrderModel.findById(req.params.id).populate(
+    "user",
+    "name email"
+  );
+  if (!order) return next(new ErrorHandler("Order not found", 404));
+
+  res.status(200).json({
+    success: true,
+    message: "get single order successfully",
+    order,
+  });
+});
+export const myOrders = catchAsyncError(async (req, res, _next) => {
+  const orders = await OrderModel.find({ user: req.user._id });
+  res.status(200).json({
+    message: "get my orders successfully",
+    orders,
+    success: true,
+  });
+});
+export const updateStatusOrder = catchAsyncError(async (req, res, next) => {
+  const order = await OrderModel.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler("Order not found", 404));
+  if (order.status == "Delivered") {
+    return next(new ErrorHandler("You have already delivered this order", 400));
+  }
+  if (order.status === "Shipping") {
+    order.status = "Delivered";
+  } else if (order.status === "Prepare") {
+    order.status = "Shipping";
+  }
+  console.log("day ne ", order.status);
+  await order.save({ new: true });
+  res.status(200).json({
+    success: true,
+    order,
+  });
+});
+export const cancelOrder = catchAsyncError(async (req, res, next) => {
+  const order = await OrderModel.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler("Order not found", 404));
+  if (order.status == "Prepare") {
+    order.status = "Cancel";
+  } else if (order.status !== "Prepare") {
+    return next(new ErrorHandler("You have already shipping this order", 400));
+  }
+
+  order.status = await order.save({ new: true });
+  res.status(200).json({
+    success: true,
+    order,
   });
 });

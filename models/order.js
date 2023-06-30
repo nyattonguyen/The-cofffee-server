@@ -23,7 +23,7 @@ const orderSchema = mongoose.Schema(
     status: {
       type: String,
       require: true,
-      default: "prepare", // "pending"
+      default: "Prepare", // "pending"
     },
     payment: {
       id: { type: String, required: true },
