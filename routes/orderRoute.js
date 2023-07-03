@@ -10,8 +10,27 @@ orderRoute.get(
   authorizeRoles("admin"),
   orderController.getAllOrder
 );
-orderRoute.get("/:id", isAuthenticatedUser, orderController.getOneOrder);
+orderRoute.get(
+  "/caltulate",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  orderController.calculateMonthlyRevenue
+);
+orderRoute.get(
+  "/week/caltulate",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  orderController.calculateDaylyRevenue
+);
+orderRoute.get(
+  "/day/caltulate",
+  isAuthenticatedUser,
+  authorizeRoles("admin"),
+  orderController.calculateMonthlyRevenue
+);
 orderRoute.get("/me", isAuthenticatedUser, orderController.myOrders);
+orderRoute.get("/:id", isAuthenticatedUser, orderController.getOneOrder);
 orderRoute.put("/:id", isAuthenticatedUser, orderController.updateStatusOrder);
 orderRoute.get("/cancel/:id", isAuthenticatedUser, orderController.cancelOrder);
+
 export default orderRoute;

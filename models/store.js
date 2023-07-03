@@ -4,29 +4,33 @@ const storeSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      require: true,
+      required: true,
     },
     desc: {
       type: String,
-      require: true,
+      required: true,
     },
     image: [
       {
         type: String,
-        require: true,
+        required: true,
       },
     ],
     address: {
       type: String,
-      require: true,
+      required: true,
     },
-    country: {
+    state: {
       type: String,
-      require: true,
+      required: true,
     },
     city: {
       type: String,
-      require: true,
+      required: true,
+    },
+    status: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

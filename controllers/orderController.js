@@ -88,7 +88,6 @@ export const updateStatusOrder = catchAsyncError(async (req, res, next) => {
   } else if (order.status === "Prepare") {
     order.status = "Shipping";
   }
-  console.log("day ne ", order.status);
   await order.save({ new: true });
   res.status(200).json({
     success: true,
@@ -109,5 +108,125 @@ export const cancelOrder = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     order,
+  });
+});
+export const calculateMonthlyRevenue = catchAsyncError(
+  async (req, res, next) => {
+    const pipeline = [
+      {
+        $match: {
+          status: "Delivered",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m",
+              date: { $toDate: "$createdAt" },
+            },
+          },
+          revenue: {
+            $sum: {
+              $toDouble: {
+                $ifNull: [{ $toDouble: "$totalPrice" }, 0],
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ];
+
+    const monthlyRevenue = await OrderModel.aggregate(pipeline);
+
+    res.status(200).json({
+      success: true,
+      monthlyRevenue,
+    });
+  }
+);
+
+export const calculateWeeklyRevenue = catchAsyncError(
+  async (req, res, next) => {
+    const pipeline = [
+      {
+        $match: {
+          status: "Delivered",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%U",
+              date: { $toDate: "$createdAt" },
+            },
+          },
+          revenue: {
+            $sum: {
+              $toDouble: {
+                $ifNull: [{ $toDouble: "$totalPrice" }, 0],
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ];
+
+    const monthlyRevenue = await OrderModel.aggregate(pipeline);
+
+    res.status(200).json({
+      success: true,
+      monthlyRevenue,
+    });
+  }
+);
+
+export const calculateDaylyRevenue = catchAsyncError(async (req, res, next) => {
+  const pipeline = [
+    {
+      $match: {
+        status: "Delivered",
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: "%Y-%h",
+            date: { $toDate: "$createdAt" },
+          },
+        },
+        revenue: {
+          $sum: {
+            $toDouble: {
+              $ifNull: [{ $toDouble: "$totalPrice" }, 0],
+            },
+          },
+        },
+      },
+    },
+    {
+      $sort: {
+        _id: 1,
+      },
+    },
+  ];
+
+  const monthlyRevenue = await OrderModel.aggregate(pipeline);
+
+  res.status(200).json({
+    success: true,
+    monthlyRevenue,
   });
 });
